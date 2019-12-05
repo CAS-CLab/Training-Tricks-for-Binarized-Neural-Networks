@@ -104,3 +104,29 @@ def adjust_learning_rate(optimizer, epoch, gammas, schedule):
         param_group['lr'] = lr
     return lr
 ```
+
+### 9. Data augmentation
+* CIFAR-100: rand crop, random horizontal flip, random rotation (+/-15 degree), **mix-up**.
+* ImageNet: random crop, random flip, colour jitter (only in first stage, disabled for stage 2).
+
+### 10. Momentum in Batch Normalization layers
+```python
+nn.BatchNorm2d(128, momentum=0.2, affine=True),
+```
+
+### 11. Reorder pooling block
+From `Conv+BN+ReLU+Pooling` to `Conv+Pooling+BN+ReLU`.
+
+### 12. Knowledge-distillation
+* KL divergence matching.
+* Feature-map matching after L2 normalization. ``||T/||T||_2-S/||S||_2||_F``
+
+### 13. Channel-attention
+```python
+x = BN(x)
+out = x.sign()
+out = conv(out)
+out *= SE(x)
+out = prelu(out)
+```
+where `SE` could be any channel attention module, such as [SE-Net](https://github.com/moskomule/senet.pytorch), [CGD](https://github.com/HolmesShuan/Compact-Global-Descriptor), [CBAM, BAM](https://github.com/Jongchan/attention-module), etc.
