@@ -139,3 +139,14 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 * Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||{\alpha}B-W||_F^2).
 
 ### 15. Double/treble channel number
+
+
+# Cite
+```
+@misc{tricks4BNN,
+  author =       {Shuan},
+  title =        {Training-Tricks-for-Binarized-Neural-Networks},
+  howpublished = {\url{https://github.com/HolmesShuan/Training-Tricks-for-Binarized-Neural-Networks}},
+  year =         {2019}
+}
+```
