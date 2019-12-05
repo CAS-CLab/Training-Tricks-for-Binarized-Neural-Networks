@@ -106,8 +106,26 @@ def adjust_learning_rate(optimizer, epoch, gammas, schedule):
 ```
 
 ### 9. Data augmentation
-* CIFAR-100: rand crop, random horizontal flip, random rotation (+/-15 degree), **[mix-up](https://github.com/hongyi-zhang/mixup)**/auto augmentation.
+* CIFAR-100: random crop, random horizontal flip, random rotation (+/-15 degree), **[mix-up](https://github.com/hongyi-zhang/mixup)**/auto augmentation.
+```python
+transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(15),
+            transforms.ToTensor(),
+            normalize,
+        ]
+```
 * ImageNet: random crop, random flip, colour jitter (only in first stage, disabled for stage 2).
+```python
+transforms.Compose([
+            transforms.RandomCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1)
+            transforms.ToTensor(),
+            normalize,
+        ]
+```
 
 ### 10. Momentum in Batch Normalization layers
 ```python
