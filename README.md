@@ -71,7 +71,7 @@ downsample = nn.Sequential(
 ```
 
 ### 5. 2-stage training strategy
-* Full-precision weights with binarized activations.
+* Full-precision weights with binarized activations./ Full-precision activations with binarized weights.
 * Using the first stage model as initialization, then train 1-bit networks.
 
 ### 6. Weight decay setting
