@@ -1,9 +1,6 @@
 # Training-Tricks-for-Binarized-Neural-Networks
 The collection of training tricks of binarized neural networks from previously published/pre-print work on binary networks. 
 
-
-**Please descibe the training details if you use all these/some/other tricks in your published works. Thanks for your tremendous efforts on training accurate binarized neural networks!**
-
 ### 1. Modified block structure
 ```python
 class BinActiveF(torch.autograd.Function):
@@ -140,6 +137,7 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 
 ### 15. Double/treble channel number
 
+**Please descibe the training details if you use all these/some/other tricks in your published works. Thanks for your tremendous efforts on training accurate binarized neural networks!**
 
 ## Cite
 ```
