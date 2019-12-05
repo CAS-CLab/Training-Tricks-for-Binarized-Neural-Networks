@@ -1,5 +1,5 @@
 # Training-Tricks-for-Binarized-Neural-Networks
-The collection of training tricks of binarized neural networks.
+The collection of training tricks of binarized neural networks from previously published/pre-print work on binary networks. **Please descibe the training details if you use all these/some/other tricks in your published works. Thanks for your tremendous efforts on training accurate binarized neural networks.**
 
 ### 1. Modified block structure
 ```python
@@ -106,7 +106,7 @@ def adjust_learning_rate(optimizer, epoch, gammas, schedule):
 ```
 
 ### 9. Data augmentation
-* CIFAR-100: rand crop, random horizontal flip, random rotation (+/-15 degree), **mix-up**.
+* CIFAR-100: rand crop, random horizontal flip, random rotation (+/-15 degree), **mix-up**/auto augmentation.
 * ImageNet: random crop, random flip, colour jitter (only in first stage, disabled for stage 2).
 
 ### 10. Momentum in Batch Normalization layers
@@ -134,3 +134,5 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 ### 14. Auxiliary loss function
 * Center loss for stage 2.
 * Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||{\alpha}B-W||_F^2).
+
+### 15. Double/treble channel number
