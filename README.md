@@ -126,7 +126,7 @@ From `Conv+BN+ReLU+Pooling` to `Conv+Pooling+BN+ReLU`.
 x = BN(x)
 out = x.sign()
 out = conv(out)
-out *= SE(x)
+out *= SE(x) # SE() generates [batchsize x C x 1 x 1] attention tensor
 out = prelu(out)
 ```
 where `SE` could be any channel attention module, such as [SE-Net](https://github.com/moskomule/senet.pytorch), [CGD](https://github.com/HolmesShuan/Compact-Global-Descriptor), [CBAM, BAM](https://github.com/Jongchan/attention-module), etc.
