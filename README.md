@@ -139,7 +139,7 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 
 **Please descibe the training details if you use all these/some/other tricks in your published works. Thanks for your tremendous efforts on training accurate binarized neural networks!**
 
-## Cite
+## Cite:
 ```
 @misc{tricks4BNN,
   author =       {Shuan},
