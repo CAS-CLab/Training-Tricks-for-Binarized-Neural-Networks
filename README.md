@@ -119,7 +119,7 @@ From `Conv+BN+ReLU+Pooling` to `Conv+Pooling+BN+ReLU`.
 
 ### 12. Knowledge-distillation
 * KL divergence matching.
-* Feature-map matching after L2 normalization. ``||T/||T||_2-S/||S||_2||_F``
+* Feature-map matching after L2 normalization. ![equation](http://latex.codecogs.com/gif.latex?||\frac{F_T}{||F_T||_2}-\frac{F_S}{||F_S||_2}||_2^2)
 
 ### 13. Channel-attention
 ```python
@@ -130,3 +130,7 @@ out *= SE(x)
 out = prelu(out)
 ```
 where `SE` could be any channel attention module, such as [SE-Net](https://github.com/moskomule/senet.pytorch), [CGD](https://github.com/HolmesShuan/Compact-Global-Descriptor), [CBAM, BAM](https://github.com/Jongchan/attention-module), etc.
+
+### 14. Auxiliary loss function
+* Center loss for stage 2.
+* Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||\alphaB-W||_F^2).
