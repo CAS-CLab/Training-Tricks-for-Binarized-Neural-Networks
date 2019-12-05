@@ -133,4 +133,4 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 
 ### 14. Auxiliary loss function
 * Center loss for stage 2.
-* Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||\alphaB-W||_F^2).
+* Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||\alpha B-W||_F^2).
