@@ -141,7 +141,7 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 ### 15. Double/treble channel number
 
 
-# Cite
+## Cite
 ```
 @misc{tricks4BNN,
   author =       {Shuan},
