@@ -82,8 +82,8 @@ optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weig
 ```
 
 ### 8. Learning rate
-* `1e-3` for stage 1. `*0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
-* `2e-4` for stage 2. `*0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
+* `1e-3` for ImageNet stage 2. `*0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
+* `2e-4` for CIFAR stage 2. `*0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
 ```python
 parser.add_argument('--schedule', type=int, nargs='+', default=[150, 225],
                     help='Decrease learning rate at these epochs.')
