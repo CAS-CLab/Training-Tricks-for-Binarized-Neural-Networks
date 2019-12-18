@@ -59,11 +59,19 @@ Replace the original basic block in ResNet18 with two Basic block mentioned abov
 
 ### 4. Full precision downsampling layers
 ```python
+# v1
 downsample = nn.Sequential(
                 nn.Conv2d(self.inplanes, planes * block.expansion, kernel_size=1, \
                                  stride=1, bias=False),
                 nn.BatchNorm2d(planes * block.expansion),
                 nn.AvgPool2d(kernel_size=2, stride=2)
+            )
+# v2
+downsample = nn.Sequential(
+                nn.AvgPool2d(kernel_size=2, stride=2)
+                nn.Conv2d(self.inplanes, planes * block.expansion, kernel_size=1, \
+                                 stride=1, bias=False),
+                nn.BatchNorm2d(planes * block.expansion),
             )
 ```
 
@@ -82,8 +90,10 @@ optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weig
 ```
 
 ### 8. Learning rate
-* `1e-3` for ImageNet stage 2. `*0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
-* `2e-4` for CIFAR stage 2. `*0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
+* `1e-3` for stage 1. 
+* `2e-4` for stage 2. 
+* CIFAR-100 : `*0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
+* ImageNet : `*0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
 ```python
 parser.add_argument('--schedule', type=int, nargs='+', default=[150, 225],
                     help='Decrease learning rate at these epochs.')
