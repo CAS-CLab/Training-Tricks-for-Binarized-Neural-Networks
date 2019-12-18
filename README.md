@@ -136,6 +136,55 @@ transforms.Compose([
             normalize,
         ]
 ```
+* ImageNet: Lighting.
+```python
+#lighting data augmentation
+imagenet_pca = {
+    'eigval': np.asarray([0.2175, 0.0188, 0.0045]),
+    'eigvec': np.asarray([
+        [-0.5675, 0.7192, 0.4009],
+        [-0.5808, -0.0045, -0.8140],
+        [-0.5836, -0.6948, 0.4203],
+    ])
+}
+
+class Lighting(object):
+    def __init__(self, alphastd,
+                 eigval=imagenet_pca['eigval'],
+                 eigvec=imagenet_pca['eigvec']):
+        self.alphastd = alphastd
+        assert eigval.shape == (3,)
+        assert eigvec.shape == (3, 3)
+        self.eigval = eigval
+        self.eigvec = eigvec
+
+    def __call__(self, img):
+        if self.alphastd == 0.:
+            return img
+        rnd = np.random.randn(3) * self.alphastd
+        rnd = rnd.astype('float32')
+        v = rnd
+        old_dtype = np.asarray(img).dtype
+        v = v * self.eigval
+        v = v.reshape((3, 1))
+        inc = np.dot(self.eigvec, v).reshape((3,))
+        img = np.add(img, inc)
+        if old_dtype == np.uint8:
+            img = np.clip(img, 0, 255)
+        img = Image.fromarray(img.astype(old_dtype), 'RGB')
+        return img
+
+    def __repr__(self):
+        return self.__class__.__name__ + '()'
+
+lighting_param = 0.1
+train_transforms = transforms.Compose([
+        transforms.RandomResizedCrop(224, scale=(0.08, 1.0)),
+        Lighting(lighting_param),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        normalize])
+```
 
 ### 10. Momentum in Batch Normalization layers
 ```python
@@ -162,6 +211,23 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 ### 14. Auxiliary loss function
 * Center loss for stage 2.
 * Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||{\alpha}B-W||_F^2).
+* Cross Entropy loss with labelsmooth.
+```python
+class CrossEntropyLabelSmooth(nn.Module):
+
+  def __init__(self, num_classes, epsilon):
+    super(CrossEntropyLabelSmooth, self).__init__()
+    self.num_classes = num_classes
+    self.epsilon = epsilon
+    self.logsoftmax = nn.LogSoftmax(dim=1)
+
+  def forward(self, inputs, targets):
+    log_probs = self.logsoftmax(inputs)
+    targets = torch.zeros_like(log_probs).scatter_(1, targets.unsqueeze(1), 1)
+    targets = (1 - self.epsilon) * targets + self.epsilon / self.num_classes
+    loss = (-targets * log_probs).mean(0).sum()
+    return loss
+```
 
 ### 15. Double/treble channel number
 
