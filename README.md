@@ -231,6 +231,14 @@ class CrossEntropyLabelSmooth(nn.Module):
 
 ### 15. Double/treble channel number
 
+### 16. Full-precision pre-training
+* step 1. replace `relu` with the following `leaky-clip`
+```python
+index = x.abs()>1.
+x[index] = x[index]*0.1+x[index].sign()*0.9 
+```
+* step 2. replace `leaky-clip` with `x.clamp_(-1,1)`
+
 **Please descibe the training details if you use all these/some/other tricks in your published works. Thanks for your tremendous efforts on training accurate binarized neural networks!**
 
 ## Cite:
