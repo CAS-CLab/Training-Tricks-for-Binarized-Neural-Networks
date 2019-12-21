@@ -213,6 +213,8 @@ where `SE` could be any channel attention module, such as [SE-Net](https://githu
 * Weight regularizer ![equation](http://latex.codecogs.com/gif.latex?||{\alpha}B-W||_F^2).
 * Cross Entropy loss with labelsmooth.
 ```python
+criterion_smooth = CrossEntropyLabelSmooth(num_classes=1000, epsilon=0.1).cuda()
+
 class CrossEntropyLabelSmooth(nn.Module):
 
   def __init__(self, num_classes, epsilon):
