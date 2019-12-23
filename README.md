@@ -129,7 +129,7 @@ transforms.Compose([
 * ImageNet: random crop, random flip, colour jitter (only in first stage, disabled for stage 2).
 ```python
 transforms.Compose([
-            transforms.RandomCrop(224),
+            transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1)
             transforms.ToTensor(),
