@@ -73,6 +73,13 @@ downsample = nn.Sequential(
                                  stride=1, bias=False),
                 nn.BatchNorm2d(planes * block.expansion),
             )
+# v3
+downsample = nn.Sequential(
+                nn.Conv2d(self.inplanes, planes * block.expansion, kernel_size=1, \
+                                 stride=1, bias=False),
+                nn.BatchNorm2d(planes * block.expansion),
+                nn.AvgPool2d(kernel_size=3, stride=2, padd=1)
+            )
 ```
 
 ### 5. 2-stage training strategy
