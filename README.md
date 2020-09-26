@@ -1,5 +1,5 @@
 # Training-Tricks-for-Binarized-Neural-Networks
-The collection of training tricks of binarized neural networks from previously published/pre-print work on binary networks. 
+A collection of training tricks of binarized neural networks from previously published/pre-print work on binary networks. **[larq](https://github.com/larq/larq) further provides an open-source deep learning library for training neural networks with extremely low precision weights and activations, such as Binarized Neural Networks (BNNs).**
 
 ### 1. Modified ResNet block structure
 ```python
@@ -264,8 +264,8 @@ From `Conv+BN+ReLU+Pooling` to `Conv+Pooling+BN+ReLU`.
 
 ### 12. Knowledge-distillation
 * KL divergence matching.
-* Feature-map matching after L2 normalization. ![equation](http://latex.codecogs.com/gif.latex?||\frac{F_T}{||F_T||_2}-\frac{F_S}{||F_S||_2}||_2^2)
-* [Label refinery](https://github.com/hessamb/label-refinery)
+* Feature-map matching after L2 normalization, e.g., ![equation](http://latex.codecogs.com/gif.latex?||\frac{F_T}{||F_T||_2}-\frac{F_S}{||F_S||_2}||_2^2).
+* [Label refinery](https://github.com/hessamb/label-refinery) (recommended).
 
 ### 13. Channel-attention
 ```python
