@@ -311,6 +311,22 @@ x[index] = x[index]*0.1+x[index].sign()*0.9
 
 ### [17. Gradient Centralization](https://github.com/Yonghongwei/Gradient-Centralization)
 
+### [18. Image scale setting]()
+```python
+train_transforms = transforms.Compose([
+        transforms.Resize(256), # transforms.Resize(int(224*1.15)),
+        transforms.RandomCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        normalize])
+        
+test_transforms = transforms.Compose([
+        transforms.Resize(int(224*1.35)),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        normalize])
+```
+
 ## Cite:
 If you find this repo useful, please cite
 ```
