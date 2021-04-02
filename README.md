@@ -1,7 +1,7 @@
 # Training-Tricks-for-Binarized-Neural-Networks
 A collection of training tricks of binarized neural networks from previously published/pre-print work on binary networks. **[larq](https://github.com/larq/larq) further provides an open-source deep learning library for training neural networks with extremely low precision weights and activations, such as Binarized Neural Networks (BNNs).**
 
-### 1. Modified ResNet block structure
+### 1. Modified ResNet Block Structure
 ```python
 class BinActiveF(torch.autograd.Function):
     def forward(self, input):
@@ -114,10 +114,10 @@ class Bottleneck(nn.Module):
 ### 2. PReLU Activation
 Please refer to the above structures.
 
-### 3. Double skip connection
+### 3. Double Skip Connections
 Replace the original basic block in ResNet18 with two `BasicBlock` mentioned above.
 
-### 4. Full precision downsampling layers
+### 4. Full Precision Downsampling Layers
 ```python
 # v1 (recommended)
 downsample = nn.Sequential(
@@ -142,48 +142,51 @@ downsample = nn.Sequential(
             )
 ```
 
-### 5. 2-stage training strategy
+### 5. Two-stage Training Strategy
 * Full-precision weights with binarized activations./ Full-precision activations with binarized weights.
 * Using the first stage model as initialization, then train 1-bit networks.
 
-### 6. Weight decay setting
+### 6. Weight Decay Setting
 * `1e-5` for stage 1.
 * `0.0` for stage 2.
 
 ### 7. Optimizer
-* Adam with stepwise scheduler.
+* Adam with the default beta settings.
 ```python
 optimizer = torch.optim.Adam(model.parameters(), args.lr, weight_decay=args.weight_decay)
 ```
-* Adam with cosine decrease (init lr=1e-3).
 
-### 8. Learning rate
-* `1e-3` for stage 1. 
-* `2e-4` for stage 2. 
-* CIFAR-100 : `*0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
-* ImageNet : `*0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
-```python
-parser.add_argument('--schedule', type=int, nargs='+', default=[150, 225],
-                    help='Decrease learning rate at these epochs.')
-parser.add_argument('--gammas', type=float, nargs='+', default=[0.1, 0.1],
-                    help='LR is multiplied by gamma on schedule, number of gammas should be equal to schedule')
+### 8. Learning Rate
+* Two-stage setting:
+  * `1e-3` for stage 1. 
+  * `2e-4` for stage 2. 
+  * CIFAR-100 : decay ratio `0.2` at 150th, 250th, 320th epochs. End at 350 epoch.
+  * ImageNet : decay ratio `0.1` at 40th, 60th, 70th epochs. End at 75 epoch.
+    ```python
+    parser.add_argument('--schedule', type=int, nargs='+', default=[150, 225],
+                        help='Decrease learning rate at these epochs.')
+    parser.add_argument('--gammas', type=float, nargs='+', default=[0.1, 0.1],
+                        help='LR is multiplied by gamma on schedule, number of gammas should be equal to schedule')
 
-def adjust_learning_rate(optimizer, epoch, gammas, schedule):
-    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr
-    assert len(gammas) == len(schedule), "length of gammas and schedule should be equal"
-    for (gamma, step) in zip(gammas, schedule):
-        if (epoch >= step):
-            lr = lr * gamma
-        else:
-            break
-    print('learning rate : %.6f.' % lr)
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
-    return lr
-```
+    def adjust_learning_rate(optimizer, epoch, gammas, schedule):
+        """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+        lr = args.lr
+        assert len(gammas) == len(schedule), "length of gammas and schedule should be equal"
+        for (gamma, step) in zip(gammas, schedule):
+            if (epoch >= step):
+                lr = lr * gamma
+            else:
+                break
+        print('learning rate : %.6f.' % lr)
+        for param_group in optimizer.param_groups:
+            param_group['lr'] = lr
+        return lr
+    ```
+* One-stage setting (~+0.5% Top-1 Acc. on ImageNet)
+  * Warm-up **5** epochs with `lr=0.001`.
+  * Increase lr to `0.004` for training based on Adam. 
 
-### 9. Data augmentation
+### 9. Data Augmentation
 * CIFAR-100: random crop, random horizontal flip, random rotation (+/-15 degree), **[mix-up](https://github.com/hongyi-zhang/mixup)**/auto augmentation.
 ```python
 transforms.Compose([
@@ -204,7 +207,7 @@ transforms.Compose([
             normalize,
         ]
 ```
-* ImageNet: Lighting.
+* ImageNet: Lighting (+~0.3% Top-1 on ImageNet).
 ```python
 #lighting data augmentation
 imagenet_pca = {
@@ -254,12 +257,13 @@ train_transforms = transforms.Compose([
         normalize])
 ```
 
-### 10. Momentum in Batch Normalization layers
+### 10. Momentum in Batch Normalization Layers
+* Set `momentum` to 0.2 (marginal improvements to accuracy).
 ```python
 nn.BatchNorm2d(128, momentum=0.2, affine=True),
 ```
 
-### 11. Reorder pooling block
+### 11. Reorder Pooling Block
 From `Conv+BN+ReLU+Pooling` to `Conv+Pooling+BN+ReLU`.
 
 ### 12. Knowledge-distillation
@@ -277,7 +281,7 @@ out = prelu(out)
 ```
 where `SE` could be any channel attention module, such as [SE-Net](https://github.com/moskomule/senet.pytorch), [CGD](https://github.com/HolmesShuan/Compact-Global-Descriptor), [CBAM, BAM](https://github.com/Jongchan/attention-module), etc.
 
-### 14. Auxiliary loss function
+### 14. Auxiliary Loss Function
 * Center loss for stage 2 (marginal improvements).
 * Cross Entropy loss with labelsmooth (~+0.5% Top-1).
 ```python
@@ -299,9 +303,10 @@ class CrossEntropyLabelSmooth(nn.Module):
     return loss
 ```
 
-### 15. Double/treble channel number
+### 15. Double/Treble Channel Number
+* Using 3x3 group convolution layers to reduce BOPs.
 
-### 16. Full-precision pre-training
+### 16. Full-precision Pre-training
 * step 1. replace `relu` with the following `leaky-clip`
 ```python
 index = x.abs()>1.
@@ -311,7 +316,7 @@ x[index] = x[index]*0.1+x[index].sign()*0.9
 
 ### [17. Gradient Centralization](https://github.com/Yonghongwei/Gradient-Centralization)
 
-### [18. Image scale setting]()
+### [18. Image Scale Setting]()
 ```python
 train_transforms = transforms.Compose([
         transforms.Resize(256), # transforms.Resize(int(224*1.15)),
